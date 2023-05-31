@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".login_Activity"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        >
+
+        <ImageView
+            android:layout_width="339dp"
+            android:layout_height="315dp"
+            android:src="@drawable/applogo"
+            android:layout_gravity="center"/>
+        <EditText
+            android:id="@+id/uniroll"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:hint="University Rollno."
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:textColorHint="@color/black"
+            android:background="@drawable/editbox"
+            android:drawableLeft="@drawable/baseline_person_24"
+            android:drawablePadding="10dp"
+            android:padding="20dp"/>
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:hint="Password"
+            android:layout_gravity="center"
+            android:textColorHint="@color/black"
+            android:background="@drawable/editbox"
+            android:drawableLeft="@drawable/baseline_lock_24"
+            android:drawablePadding="10dp"
+            android:padding="20dp"
+            android:layout_marginTop="20dp"/>
+        <Button
+            android:id="@+id/loginbtn"
+            android:layout_width="130dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:text="LOGIN"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/editbutton"/>
+
+    </LinearLayout>
+</LinearLayout>

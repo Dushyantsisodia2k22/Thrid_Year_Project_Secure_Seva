@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "965327406000",
+    "project_id": "busdata-358b6",
+    "storage_bucket": "busdata-358b6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:965327406000:android:27be8b8c33fdcb96774c75",
+        "android_client_info": {
+          "package_name": "com.example.gla_final_2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRGDlHRnWPJGYabK55C6pwNEPsk6Z1nAM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
