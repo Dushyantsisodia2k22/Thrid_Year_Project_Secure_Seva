@@ -14,65 +14,85 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
 
+
+import java.util.Objects;
 public class login_Activity extends AppCompatActivity {
-
-    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://busdata-358b6-default-rtdb.firebaseio.com/");
-
+    EditText loginUsername, loginPassword;
+    Button loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        loginUsername = findViewById(R.id.uniroll);
+        loginPassword = findViewById(R.id.password);
+        loginButton = findViewById(R.id.loginbtn);
 
-
-        final EditText uniroll = findViewById(R.id.uniroll);
-        final EditText password = findViewById(R.id.password);
-        final Button loginBtn = findViewById(R.id.loginbtn);
-
-        loginBtn.setOnClickListener(new View.OnClickListener() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String unirolltxt = uniroll.getText().toString();
-                final String passwordtxt = password.getText().toString();
+                if(!validateUsername()| !validatePassword()){
 
-                if (unirolltxt.isEmpty() || passwordtxt.isEmpty()) {
-                    Toast.makeText(login_Activity.this, "Please enter the University Roll Number and Password", Toast.LENGTH_SHORT).show();
+                }else{
+                    checkUser();
                 }
-                else {
-                    databaseReference.child("student").addListenerForSingleValueEvent(new ValueEventListener() {
-
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                            if (snapshot.hasChild(unirolltxt)) {
-                                final String getpassword = snapshot.child(unirolltxt).child("password").getValue(String.class);
+            }
+        });
 
 
-                                    if(getpassword.equals(passwordtxt)) {
-                                        Toast.makeText(login_Activity.this, "Successfully Logged in", Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(login_Activity.this, selectionActivity.class));
-                                        finish();
-                                    }
-                                    else {
-                                        Toast.makeText(login_Activity.this, "Wrong Password", Toast.LENGTH_SHORT).show();
-                                    }
 
-                            }
-                            else {
-                                Toast.makeText(login_Activity.this, "Password not found", Toast.LENGTH_SHORT).show();
-                            }
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            Toast.makeText(login_Activity.this, "Database Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+    }
+    public Boolean validateUsername() {
+        String val = loginUsername.getText().toString();
+        if (val.isEmpty()) {
+            loginUsername.setError("cannot be empty");
+            return false;
+        } else {
+            loginUsername.setError(null);
+            return true;
+        }
+    }
+    public Boolean validatePassword(){
+        String val = loginPassword.getText().toString();
+        if (val.isEmpty()) {
+            loginPassword.setError("Password cannot be empty");
+            return false;
+        } else {
+            loginPassword.setError(null);
+            return true;
+        }
+    }
+    public void checkUser(){
+        String userUsername = loginUsername.getText().toString().trim();
+        String userPassword = loginPassword.getText().toString().trim();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("student");
+        Query checkUserDatabase = reference.orderByChild("username").equalTo(userUsername);
+        checkUserDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    loginUsername.setError(null);
+                    String passwordFromDB = snapshot.child(userUsername).child("pass").getValue(String.class);
+                    if (Objects.equals(passwordFromDB,userPassword)) {
+                        loginUsername.setError(null);
+                        Intent intent = new Intent(login_Activity.this, selectionActivity.class);
+                        startActivity(intent);
+                    } else {
+                        loginPassword.setError("Invalid Password");
+                        loginPassword.requestFocus();
+                    }
+                } else {
+                    loginUsername.setError("Does not exist");
+                    loginUsername.requestFocus();
                 }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
             }
         });
     }
