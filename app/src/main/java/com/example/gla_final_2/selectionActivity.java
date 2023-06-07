@@ -34,6 +34,14 @@ public class selectionActivity extends AppCompatActivity {
                 finish(); // Optionally finish the current activity
             }
         });
+        Button nextButton = findViewById(R.id.nextButton);
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(selectionActivity.this, MapsActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void saveLoggedStatus(boolean hasLogged) {

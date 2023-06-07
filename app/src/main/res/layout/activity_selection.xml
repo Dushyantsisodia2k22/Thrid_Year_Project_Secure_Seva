@@ -27,5 +27,13 @@
         android:onClick="logoutClicked"/>
 
 
+    <Button
+        android:id="@+id/nextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MAP"
+        android:layout_centerInParent="true" />
+
+
 
 </RelativeLayout>
