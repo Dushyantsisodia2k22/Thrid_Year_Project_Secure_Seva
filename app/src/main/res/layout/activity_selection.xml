@@ -17,23 +17,49 @@
 
     <ImageView
         android:id="@+id/logoutButton"
-        android:layout_width="40dp"
+        android:layout_width="48dp"
         android:layout_height="50dp"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="6dp"
-        android:contentDescription="Logout"
-        android:src="@drawable/baseline_logout_24"
         android:clickable="true"
-        android:onClick="logoutClicked"/>
+        android:contentDescription="Logout"
+        android:onClick="logoutClicked"
+        android:src="@drawable/baseline_logout_24" />
 
+    <Spinner
+        android:id="@+id/firstSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="134dp"
+        android:layout_marginEnd="16dp"
+        android:minHeight="48dp"
+
+
+        tools:ignore="DuplicateClickableBoundsCheck" />
+
+    <Spinner
+        android:id="@+id/secondSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/firstSpinner"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="57dp"
+        android:layout_marginEnd="16dp"
+        android:minHeight="48dp"
+        android:prompt="@string/my_map_api_key"
+
+
+        />
 
     <Button
         android:id="@+id/nextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="MAP"
-        android:layout_centerInParent="true" />
-
-
+        android:layout_below="@id/secondSpinner"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="89dp"
+        android:text="MAP" />
 
 </RelativeLayout>
