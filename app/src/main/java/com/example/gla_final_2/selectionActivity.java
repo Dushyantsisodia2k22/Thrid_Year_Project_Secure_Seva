@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,21 +21,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class selectionActivity extends AppCompatActivity {
 
     public static final String PREFS_NAME = "MyPrefsFile";
     public static final String PREF_KEY_HAS_LOGGED = "hasLogged";
 
-    private Spinner firstSpinner;
-    private Spinner secondSpinner;
-    private ArrayAdapter<String> firstSpinnerAdapter;
-    private ArrayAdapter<String> secondSpinnerAdapter;
+    private Spinner mainSpinner;
+    private Spinner nestedSpinner;
+    private Button searchButton;
+
     private DatabaseReference busDataRef;
-    private Map<String, List<String>> parentToChildOptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,81 +54,85 @@ public class selectionActivity extends AppCompatActivity {
             }
         });
 
-        Button nextButton = findViewById(R.id.nextButton);
-        nextButton.setOnClickListener(new View.OnClickListener() {
+        mainSpinner = findViewById(R.id.firstSpinner);
+        nestedSpinner = findViewById(R.id.secondSpinner);
+        searchButton = findViewById(R.id.nextButton);
+
+        busDataRef = FirebaseDatabase.getInstance().getReference("Bus_Data");
+
+        initializeMainSpinner();
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String selectedMainItem = mainSpinner.getSelectedItem().toString();
+                String selectedNestedItem = nestedSpinner.getSelectedItem().toString();
+
                 Intent intent = new Intent(selectionActivity.this, MapsActivity.class);
+                intent.putExtra("selectedMainItem", selectedMainItem);
+                intent.putExtra("selectedNestedItem", selectedNestedItem);
                 startActivity(intent);
-            }
-        });
-
-        // Initialize the spinners
-        firstSpinner = findViewById(R.id.firstSpinner);
-        secondSpinner = findViewById(R.id.secondSpinner);
-
-        // Initialize the map to store parent to child options
-        parentToChildOptions = new HashMap<>();
-
-        // Create an ArrayAdapter for the first spinner
-        firstSpinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
-        firstSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        firstSpinner.setAdapter(firstSpinnerAdapter);
-
-        // Create an ArrayAdapter for the second spinner
-        secondSpinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
-        secondSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        secondSpinner.setAdapter(secondSpinnerAdapter);
-
-        // Read the data from the "bus_data" node
-        busDataRef = FirebaseDatabase.getInstance().getReference("Bus_Data");
-        busDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot parentSnapshot : dataSnapshot.getChildren()) {
-                    String parentOption = parentSnapshot.getKey();
-                    firstSpinnerAdapter.add(parentOption);
-
-                    List<String> childOptions = new ArrayList<>();
-                    for (DataSnapshot childSnapshot : parentSnapshot.getChildren()) {
-                        String childOption = childSnapshot.getKey();
-                        childOptions.add(childOption);
-                    }
-                    parentToChildOptions.put(parentOption, childOptions);
-                }
-                if (firstSpinnerAdapter.getCount() > 0) {
-                    firstSpinner.setSelection(0);
-                    updateSecondSpinner();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Handle database error
-            }
-        });
-
-        // Add listener for the first spinner selection
-        firstSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                updateSecondSpinner();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Do nothing
             }
         });
     }
 
-    private void updateSecondSpinner() {
-        String selectedParentOption = firstSpinner.getSelectedItem().toString();
-        List<String> childOptions = parentToChildOptions.get(selectedParentOption);
-        if (childOptions != null) {
-            secondSpinnerAdapter.clear();
-            secondSpinnerAdapter.addAll(childOptions);
-        }
+    private void initializeMainSpinner() {
+        busDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final List<String> mainSpinnerItems = new ArrayList<>();
+
+                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                    String mainItem = childSnapshot.getKey();
+                    mainSpinnerItems.add(mainItem);
+                }
+
+                ArrayAdapter<String> mainSpinnerAdapter = new ArrayAdapter<>(selectionActivity.this, android.R.layout.simple_spinner_item, mainSpinnerItems);
+                mainSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                mainSpinner.setAdapter(mainSpinnerAdapter);
+
+                mainSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        String selectedItem = mainSpinnerItems.get(position);
+
+                        retrieveNestedSpinnerItems(selectedItem);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle database read error if needed
+            }
+        });
+    }
+
+    private void retrieveNestedSpinnerItems(String selectedItem) {
+        busDataRef.child(selectedItem).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final List<String> nestedSpinnerItems = new ArrayList<>();
+
+                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                    String nestedItem = childSnapshot.getKey();
+                    nestedSpinnerItems.add(nestedItem);
+                }
+
+                ArrayAdapter<String> nestedSpinnerAdapter = new ArrayAdapter<>(selectionActivity.this, android.R.layout.simple_spinner_item, nestedSpinnerItems);
+                nestedSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                nestedSpinner.setAdapter(nestedSpinnerAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle database read error if needed
+            }
+        });
     }
 
     private void saveLoggedStatus(boolean hasLogged) {
