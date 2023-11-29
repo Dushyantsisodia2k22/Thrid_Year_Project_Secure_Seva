@@ -15,7 +15,7 @@
         android:layout_width="333dp"
         android:layout_height="451dp"
         android:layout_weight="1"
-        app:srcCompat="@drawable/applogo">
+        app:srcCompat="@drawable/img">
 
     </ImageView>
 

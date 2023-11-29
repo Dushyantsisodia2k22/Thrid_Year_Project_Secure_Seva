@@ -5,12 +5,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".login_Activity">
 
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="0dp" />
+
+
+
+
+
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:title="GLA BUS TRACKING APP"
+        android:background="@color/black"
+        app:title="SECURE SEVA"
         app:titleTextColor="@color/white"
         android:backgroundTint="@color/black"
         />
@@ -26,40 +43,15 @@
         android:onClick="logoutClicked"
         android:src="@drawable/baseline_logout_24" />
 
-    <Spinner
-        android:id="@+id/firstSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="134dp"
-        android:layout_marginEnd="16dp"
-        android:minHeight="48dp"
 
-
-        tools:ignore="DuplicateClickableBoundsCheck" />
-
-    <Spinner
-        android:id="@+id/secondSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/firstSpinner"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="57dp"
-        android:layout_marginEnd="16dp"
-        android:minHeight="48dp"
-        android:prompt="@string/my_map_api_key"
-
-
-        />
-
-    <Button
-        android:id="@+id/nextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/secondSpinner"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="89dp"
-        android:text="MAP" />
-
+    <ImageView
+        android:id="@+id/contact"
+        android:layout_width="48dp"
+        android:layout_height="49dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="81dp"
+        android:clickable="true"
+        android:contentDescription="contact"
+        android:onClick="logoutClicked"
+        android:src="@drawable/baseline_person_add_24" />
 </RelativeLayout>

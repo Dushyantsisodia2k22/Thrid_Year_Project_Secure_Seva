@@ -42,10 +42,6 @@
             android:value="@string/my_map_api_key" />
 
         <activity
-            android:name=".MapsActivity"
-            android:exported="false"
-            android:label="@string/title_activity_maps" />
-        <activity
             android:name=".selectionActivity"
             android:exported="false" />
         <activity android:name=".login_Activity" />
